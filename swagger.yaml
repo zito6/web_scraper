@@ -1,0 +1,283 @@
+openapi: 3.0.0
+info:
+  title: web scraper api
+  contact: {}
+  version: '1.0'
+servers:
+- url: http://localhost:5000/api/v1
+  variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register
+      operationId: Register
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/RegisterRequest'
+              - example:
+                  name: James
+                  email: randomEmail@email.com
+                  password: some_random_password
+            example:
+              name: James
+              email: randomEmail@email.com
+              password: some_random_password
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: login
+      operationId: login
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/loginrequest'
+              - example:
+                  email: randomEmail@gmail.com
+                  password: some_random_password
+            example:
+              email: randomEmail@gmail.com
+              password: some_random_password
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /searches:
+    post:
+      tags:
+      - search
+      summary: Create Search
+      operationId: CreateSearch
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/CreateSearchRequest'
+              - example:
+                  name: ktm 690 unweit von Berlin
+                  link: https://www.ebay-kleinanzeigen.de/s-motorraeder-roller/berlin/preis::4000/ktm-690/k0c305l3331r200
+            example:
+              name: ktm 690 unweit von Berlin
+              link: https://www.ebay-kleinanzeigen.de/s-motorraeder-roller/berlin/preis::4000/ktm-690/k0c305l3331r200
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    get:
+      tags:
+      - search
+      summary: Get all searches
+      operationId: Getallsearches
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /searches/{searchId}:
+    delete:
+      tags:
+      - search
+      summary: delate
+      operationId: delate
+      parameters:
+      - name: searchId
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - search
+      summary: Update
+      operationId: Update
+      parameters:
+      - name: searchId
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: 'scraping can be activated with "activate": true, scraper is looking for new offers each x minutes according to "interval" parameter'
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateRequest'
+              - example:
+                  name: ktm 690 unweit von Berlin
+                  link: https://www.ebay-kleinanzeigen.de/s-motorraeder-roller/berlin/preis::4000/ktm-690/k0c305l3331r200
+                  active: true
+                  interval: 10
+            example:
+              name: ktm 690 unweit von Berlin
+              link: https://www.ebay-kleinanzeigen.de/s-motorraeder-roller/berlin/preis::4000/ktm-690/k0c305l3331r200
+              active: true
+              interval: 10
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /offers:
+    get:
+      tags:
+      - offers
+      summary: Get all  Offers
+      operationId: GetallOffers
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /offers/{searchId}:
+    get:
+      tags:
+      - offers
+      summary: get offer from one search
+      operationId: getofferfromonesearch
+      parameters:
+      - name: searchId
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+components:
+  schemas:
+    RegisterRequest:
+      title: RegisterRequest
+      required:
+      - name
+      - email
+      - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: James
+        email: randomEmail@gmail.com
+        password: some_random_password
+    loginrequest:
+      title: loginrequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: randomEmail@gmail.com
+        password: some_random_password
+    CreateSearchRequest:
+      title: CreateSearchRequest
+      required:
+      - name
+      - link
+      type: object
+      properties:
+        name:
+          type: string
+        link:
+          type: string
+      example:
+        name: ktm 690 unweit von Berlin
+        link: https://www.ebay-kleinanzeigen.de/s-motorraeder-roller/berlin/preis::4000/ktm-690/k0c305l3331r200
+    UpdateRequest:
+      title: UpdateRequest
+      required:
+      - name
+      - link
+      - active
+      - interval
+      type: object
+      properties:
+        name:
+          type: string
+        link:
+          type: string
+        active:
+          type: boolean
+        interval:
+          type: integer
+          format: int32
+      example:
+        name: ktm 690 unweit von Berlin
+        link: https://www.ebay-kleinanzeigen.de/s-motorraeder-roller/berlin/preis::4000/ktm-690/k0c305l3331r200
+        active: true
+        interval: 10
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+- name: Auth
+  description: ''
+- name: search
+  description: ''
+- name: offers
+  description: ''
