@@ -14,5 +14,5 @@ After that run this command
 npm install && npm start
 
 
-Swagger UI
+Swagger UI with API docs avalible under /api-docs
 
